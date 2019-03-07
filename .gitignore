@@ -3,4 +3,5 @@
 .idea
 **/*.iml
 get_token.sh
-config.env
+**/*.env
+secret_stuff/**
