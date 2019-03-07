@@ -1,0 +1,10 @@
+[package]
+name = "auth0-cli"
+version = "0.1.0"
+authors = ["Loughlin Fox <loughlinjfox@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+reqwest = "0.9.11"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.39"

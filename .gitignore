@@ -1,0 +1,6 @@
+/target
+**/*.rs.bk
+.idea
+**/*.iml
+get_token.sh
+config.env
