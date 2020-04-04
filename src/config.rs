@@ -1,10 +1,8 @@
-
-use serde::{Serialize};
+use serde::Serialize;
 use std::collections::HashMap;
 use toml::de;
 use std::path::PathBuf;
 use std::fs;
-use clap::ArgMatches;
 use std::process::exit;
 
 
@@ -40,18 +38,22 @@ pub struct AppConfig {
     pub name: String,
     pub client_id: String,
     pub client_secret: String,
-    pub domain: String
+    pub domain: String,
 }
 
 
 impl AppConfig {
-    pub fn of_commandline_args(args: &ArgMatches) -> Result<AppConfig, String> {
-        let extract = |name| args.value_of(name).unwrap().to_string();
+    pub fn new(
+        name: String,
+        client_id: String,
+        client_secret: String,
+        domain: String,
+    ) -> Result<AppConfig, String> {
         Ok(AppConfig {
-            name: extract("name"),
-            client_id: extract("client-id"),
-            client_secret: extract("client-secret"),
-            domain: extract("domain"),
+            name,
+            client_id,
+            client_secret,
+            domain,
         })
     }
 }

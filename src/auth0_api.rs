@@ -9,7 +9,6 @@ use crate::config::{AppConfig};
 use serde_json::{Value};
 use std::time;
 use std::time::{Duration, SystemTime};
-use clap::ArgMatches;
 use jwt;
 use crate::config;
 
@@ -99,10 +98,10 @@ impl Auth0Api {
 
 
 impl Auth0Api {
-    pub fn api_of_commandline_args(args: &ArgMatches) -> Auth0Api {
+    pub fn api_for_app(app_name: &str) -> Auth0Api {
         let config = config::read_config();
 
-        let app_name = args.value_of("app").unwrap();
+        // let app_name = args.value_of("app").unwrap();
         let failure_msg = format!("Can not find config for app: {}", app_name);
         let app_config = config.get_app_config(app_name).expect(&failure_msg);
 
