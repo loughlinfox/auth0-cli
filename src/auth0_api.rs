@@ -165,7 +165,7 @@ fn access_token_still_valid(access_token: &String) -> bool {
                 })
                 .unwrap_or(false)
         },
-        Err(err) => {
+        Err(_err) => {
 //            dbg!(err);
             false
         }

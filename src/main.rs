@@ -1,9 +1,12 @@
 extern crate clap;
-#[macro_use] extern crate prettytable;
+#[macro_use]
+extern crate prettytable;
 extern crate reqwest;
 extern crate jsonwebtoken as jwt;
-#[macro_use] extern crate serde;
-#[macro_use] extern crate serde_json;
+#[macro_use]
+extern crate serde;
+#[macro_use]
+extern crate serde_json;
 extern crate crossbeam;
 extern crate dirs;
 
@@ -13,7 +16,7 @@ mod config;
 
 use clap::{App, Arg, ArgMatches, SubCommand};
 use prettytable::Table;
-use auth0_api::{Auth0Api};
+use auth0_api::Auth0Api;
 use config::Config;
 use crate::config::AppConfig;
 use crate::user::User;
@@ -32,7 +35,7 @@ fn main() {
         .arg(app_arg())
         .about("List all users");
 
-    let create_user_command : App = SubCommand::with_name("create")
+    let create_user_command: App = SubCommand::with_name("create")
         .arg(Arg::with_name("email").required(true))
         .arg(Arg::with_name("password").required(true))
         .arg(app_arg())
@@ -86,28 +89,41 @@ fn main() {
             .about("View, validate or modify the (global) config")
     };
 
-    let app_matches = App::new("auth0")
+    let completions_command = {
+        SubCommand::with_name("completions")
+            .about("Generate fish shell completions - pipe std to completions file")
+    };
+
+    let app = App::new("auth0")
         .version("0.1")
         .about("Command line app for accessing auth0")
         .subcommand(list_users_command)
         .subcommand(create_user_command)
         .subcommand(delete_user_command)
         .subcommand(config_command)
-        .get_matches();
+        .subcommand(completions_command);
+
+    let app_matches = app.clone().get_matches();
 
     match app_matches.subcommand() {
         ("list", matches) => {
             list_users_main(matches.unwrap());
-        },
+        }
         ("create", matches) => {
             create_user_main(matches.unwrap());
-        },
+        }
         ("delete", matches) => {
             delete_user_main(matches.unwrap());
-        },
+        }
         ("config", matches) => {
             config_main(matches.unwrap());
-        },
+        }
+        ("completions", _) => {
+            let name = "auth0-cli";
+            let shell = clap::Shell::Fish;
+            let output = &mut std::io::stdout();
+            app.clone().gen_completions_to(name, shell, output)
+        }
         _ => {
             println!("{}", app_matches.usage());
         }
@@ -182,14 +198,14 @@ fn config_main(args: &ArgMatches) {
         ("display", _) => {
             let config_str = config::read_config_file();
             println!("{}", config_str);
-        },
+        }
         ("validate", _) => {
             let config_str = config::read_config_file();
             match Config::from_string(&config_str) {
                 Ok(_) => println!("\n{}\n", Green.paint("Config is valid")),
                 Err(err) => println!("\n{}: {}\n", Red.paint("Invalid config"), err)
             };
-        },
+        }
         ("add-app", matches) => {
             let args = matches.unwrap();
             let config = config::read_config();
@@ -197,14 +213,14 @@ fn config_main(args: &ArgMatches) {
                 .expect("Failed to create app config from command line args.");
             let config = config.add_app(app_config);
             config.persist();
-        },
+        }
         ("remove-app", matches) => {
             let app_name = matches.and_then(|args| {
                 args.value_of("app-name")
             }).unwrap();
             let config = config::read_config().remove_app(app_name);
             config.persist();
-        },
+        }
         _ => {
             println!("{}", args.usage());
         }
