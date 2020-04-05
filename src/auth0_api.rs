@@ -116,7 +116,7 @@ impl Auth0Api {
                 let token = fetch_access_token(app_config).expect("Failed to fetch access token");
                 config
                     .add_access_token(app_name, &token)
-                    .persist();
+                    .persist(false);
                 token
             }
         };

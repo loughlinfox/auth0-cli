@@ -87,10 +87,16 @@ impl Config {
         self.apps.get(app_name)
     }
 
-    pub fn persist(&self) {
+    pub fn persist(&self, verbose: bool) {
         let config_str = toml::to_string(self).unwrap();
         match fs::write(config_path(), &config_str) {
-            Ok(()) => println!("New config: \n{}", &config_str),
+            Ok(()) => {
+                if verbose {
+                    println!("Persisted new config: \n{}", &config_str)
+                } else {
+                    println!("Persisted new config.");
+                }
+            },
             Err(err) => {
                 println!("Failed to persist new config: {}", err);
                 exit(1);

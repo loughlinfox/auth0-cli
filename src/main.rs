@@ -1,5 +1,5 @@
-#![allow(unused_imports)]
-#![allow(dead_code)]
+// #![allow(unused_imports)]
+// #![allow(dead_code)]
 #[macro_use]
 extern crate prettytable;
 extern crate reqwest;
@@ -22,7 +22,6 @@ use config::Config;
 use crate::config::AppConfig;
 use crate::user::User;
 use ansi_term::Color::{Red, Green};
-use std::process::exit;
 
 #[derive(Debug, StructOpt)]
 enum ConfigOpts {
@@ -82,7 +81,7 @@ enum Opts {
 
 fn main() {
     let opts: Opts = Opts::from_args();
-    println!("OPT: {:?}", opts);
+    // println!("OPT: {:?}", opts);
 
     match opts {
         Opts::Create { email: name, password, app_name } => {
@@ -190,10 +189,10 @@ fn config_add_app_main(
     let app_config = AppConfig::new(name, client_id, client_secret, domain)
         .expect("Failed to create app config from command line args.");
     let config = config.add_app(app_config);
-    config.persist();
+    config.persist(true);
 }
 
 fn config_remove_app_main(app_name: &str) {
     let config = config::read_config().remove_app(app_name);
-    config.persist();
+    config.persist(true);
 }
